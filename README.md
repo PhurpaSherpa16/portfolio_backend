@@ -20,9 +20,65 @@ A robust and scalable backend for portfolio applications, built with **Express.j
 
 ---
 
+
+## 🛠️ Getting Started - Follow the steps below to run the project
+
+### 1. Installation
+
+```bash
+git clone <your-repository-url>
+cd portfolio_backend
+```
+
+It will automatically install the required packages
+
+```bash
+npm install
+```
+
+### 2. Environment Setup
+
+Create a `.env` file in the root directory and add your credentials:
+
+```env
+DATABASE_URL="your_postgresql_database_url"
+DIRECT_URL="your_direct_database_url"
+SUPABASE_URL="your_supabase_project_url"
+SUPABASE_SERVICE_ROLE_KEY="your_supabase_service_role_key"
+```
+
+### 3. Run the server
+
+```bash
+npm run dev
+```
+
+Expected output:
+
+```bash
+📊 API running at http://localhost:9000
+```
+
+---
+
+### Database Initialization
+Later if you want to initialize the database, run the following commands:
+```bash
+# Generate Prisma Client
+npx prisma generate
+
+# Run migrations (if any)
+npx prisma migrate dev
+
+# Sync database schema
+npx prisma db push
+```
+
+---
+
 ## ⚙️ Install Dependencies
 
-Install all required packages:
+If you want to install all required packages:
 
 ```bash
 npm install
@@ -46,42 +102,6 @@ portfolio_backend/
 ├── index.js           # Application entry point
 ├── package.json        # Dependencies and scripts
 └── .gitignore         # Git ignore rules
-```
-
----
-
-## 🛠️ Getting Started
-
-### 1. Installation
-
-```bash
-git clone <your-repository-url>
-cd portfolio_backend
-npm install
-```
-
-### 2. Environment Setup
-
-Create a `.env` file in the root directory and add your credentials:
-
-```env
-DATABASE_URL="your_postgresql_database_url"
-DIRECT_URL="your_direct_database_url"
-SUPABASE_URL="your_supabase_project_url"
-SUPABASE_SERVICE_ROLE_KEY="your_supabase_service_role_key"
-```
-
-### 3. Database Initialization
-
-```bash
-# Generate Prisma Client
-npx prisma generate
-
-# Run migrations (if any)
-npx prisma migrate dev
-
-# Sync database schema
-npx prisma db push
 ```
 
 ---

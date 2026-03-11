@@ -62,7 +62,7 @@ Expected output:
 ---
 
 ### Database Initialization
-Later if you want to initialize the database, run the following commands:
+To initialize the database, run the following commands:
 ```bash
 # Generate Prisma Client
 npx prisma generate
@@ -78,7 +78,7 @@ npx prisma db push
 
 ## ⚙️ Install Dependencies
 
-If you want to install all required packages:
+If error / changes required, install all required packages:
 
 ```bash
 npm install
@@ -91,7 +91,7 @@ npm install -D nodemon prisma
 ## 📂 Project Structure
 
 ```text
-portfolio_backend/
+Projects/
 ├── controller/         # Request handlers
 ├── lib/               # Shared libraries (Prisma client, etc.)
 ├── middleware/         # Custom Express middlewares
@@ -115,6 +115,17 @@ portfolio_backend/
 | `npm run build` | Generates the Prisma client. |
 
 ---
+
+## 📝 Summary
+
+5 easy steps to run the project:
+1. Clone the project/repository
+2. Run the bash ( npm install ) it will automatically install all the required packages
+3. Create a .env file in the root directory and add your credentials
+4. Run the bash ( npm run dev ) it will start the server
+5. Open http://localhost:9000 in your browser
+
+--- 
 
 ## 🛡️ License
 

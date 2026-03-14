@@ -1,16 +1,8 @@
-export const urlNotFound = (req, res) =>{
-    res.status(404).json({
-        success: false,
-        statusCode: 404,
-        message: `URL not found. ${req.originalUrl}`,
-        default_url: `/projects`
-    })
-}
 
 export const errorHandler = (err, req, res, next) =>{
     err.statusCode = err.statusCode || 500
     const isDevelopment = process.env.NODE_ENV === 'development'
-
+    
     if(isDevelopment){
         console.log('❌ Error', err)
         res.status(err.statusCode).json({
@@ -36,4 +28,14 @@ export const errorHandler = (err, req, res, next) =>{
             })
         }
     } 
+}
+
+
+export const urlNotFound = (req, res) =>{
+    res.status(404).json({
+        success: false,
+        statusCode: 404,
+        message: `URL not found. ${req.originalUrl}`,
+        default_url: `/projects`
+    })
 }

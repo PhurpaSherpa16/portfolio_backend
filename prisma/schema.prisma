@@ -9,12 +9,107 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Project {
-  id          String   @id @default(uuid())
-  title       String
-  description String
-  image       String
-  link        String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model user {
+  id         String    @id @default(uuid())
+  email      String    @unique
+  first_name String
+  last_name  String
+  role       role      @default(admin)
+  isActive   Boolean   @default(true)
+  avatar_url String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  projects   project[]
+  queries    queries[]
+}
+
+enum role {
+  admin
+  editor
+}
+
+model project {
+  id            String  @id @default(uuid())
+  title         String  @unique
+  tagline       String
+  short_desc    String
+  problem       String
+  solution      String
+  role          String
+  timeline      String
+  category      String
+  status        String  @default("not-completed")
+  featured      Boolean @default(false)
+  order         Int     @unique
+  image_url     String
+  thumbnail_url String
+  live_url      String
+  github_url    String
+  user_id_fk    String
+  user          user    @relation(fields: [user_id_fk], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  features   project_features[]
+  process    project_process[]
+  tech_stack project_tech_stack[]
+}
+
+model project_features {
+  id            String  @id @default(uuid())
+  feature       String
+  project_id_fk String
+  project       project @relation(fields: [project_id_fk], references: [id], onDelete: Cascade)
+}
+
+model project_process {
+  id            String  @id @default(uuid())
+  process_title String
+  process_desc  String
+  project_id_fk String
+  project       project @relation(fields: [project_id_fk], references: [id], onDelete: Cascade)
+}
+
+model tech_stack {
+  id                String               @id @default(uuid())
+  tech_stack        String               @unique
+  projectTechStacks project_tech_stack[]
+}
+
+model project_tech_stack {
+  id               String     @id @default(uuid())
+  tech_stack_id_fk String
+  project_id_fk    String
+  tech_stack       tech_stack @relation(fields: [tech_stack_id_fk], references: [id])
+  project          project    @relation(fields: [project_id_fk], references: [id], onDelete: Cascade)
+}
+
+model queries {
+  id          String  @id @default(uuid())
+  email       String
+  message     String
+  isOpen      Boolean @default(false)
+  isFavourite Boolean @default(false)
+
+  createdAt     DateTime       @default(now())
+  user          user?          @relation(fields: [userId], references: [id])
+  userId        String?
+  notifications notification[]
+}
+
+model notification {
+  id String @id @default(uuid())
+
+  contact String
+  message String
+
+  entity_type String
+  entity_id   String
+  entity_link String
+  is_open     Boolean @default(false)
+
+  quries queries @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
 }

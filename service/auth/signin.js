@@ -23,11 +23,12 @@ export const  signin_service = async (req) => {
             }
         }
 
-        const userData = await prisma.user.findUnique({where : {id: data.user.id},})
+        const userData = await prisma.user.findUnique({where : {id: data.user.id}, 
+            select: {id: true, email: true, first_name: true, last_name: true, avatar_url: true}})
 
         if(!userData) throw new AppError('User not found.', 400)
 
-        return {user: userData,token: data.session?.access_token}
+        return {user: userData, token: data.session?.access_token}
 
     } catch (error) {
         if(error instanceof AppError) throw error

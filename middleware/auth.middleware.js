@@ -1,5 +1,4 @@
 import { supabase } from "../utils/supabase.js"
-import jwt from "jsonwebtoken"
 
 export const jwtAuthMiddleware = async(req, res, next) => {
     const auth = req.headers.authorization
@@ -16,8 +15,4 @@ export const jwtAuthMiddleware = async(req, res, next) => {
     } catch (error) {
         return res.status(401).json({ message: "Invalid token" })
     }
-}
-
-export const generateToken = (payload) => {
-    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' })
 }

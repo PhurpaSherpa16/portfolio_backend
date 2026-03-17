@@ -21,10 +21,3 @@ export const signin = CatchAsync(async (req, res, next) => {
     })
         
 })
-    
-
-export const google = CatchAsync(async (req, res, next) => {
-    const result = await auth_service.google_service(req)
-    res.redirect(result)
-})
-    

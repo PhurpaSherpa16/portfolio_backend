@@ -4,6 +4,7 @@ import { postProject } from "./project/postProject.js";
 import { editProject } from "./project/editProject.js";
 import { deleteProject } from "./project/deleteProject.js";
 import { patchFeaturedProject } from "./project/patchFeaturedProject.js";
+import { getFeaturedProjects } from "./project/getFeaturedProjects.js";
 
 export const projectService = {
     getAllProjects,
@@ -11,5 +12,6 @@ export const projectService = {
     postProject,
     editProject,
     deleteProject,
-    patchFeaturedProject
+    patchFeaturedProject,
+    getFeaturedProjects
 }

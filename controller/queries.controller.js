@@ -20,6 +20,7 @@ export const postQuery = CatchAsync(async(req, res, next) =>{
 })
 
 export const getSingleQuery = CatchAsync(async(req, res, next) =>{
+    console.log('runnign... single');
     const query = await queries_services.getSingleQuery(req)
     res.json({
         success: true,
@@ -35,4 +36,15 @@ export const deleteQuery = CatchAsync(async(req, res, next) =>{
         message: "Query deleted successfully"
     })
 })
+
+export const getUnreadQueryCount = CatchAsync(async(req, res, next) =>{
+    console.log('runnign...');
+    const count = await queries_services.getUnreadQueryCount()
+    res.json({
+        success: true,
+        message: "Unread query count fetched successfully",
+        data: count
+    })
+})
+
     

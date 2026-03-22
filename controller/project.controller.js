@@ -53,3 +53,12 @@ export const patchFeaturedProject = CatchAsync(async(req, res, next) =>{
         data: result
     })
 })
+
+export const getFeaturedProjects = CatchAsync(async(req, res, next) =>{
+    const result = await projectService.getFeaturedProjects()
+    res.json({
+        success: true,
+        message: "Featured projects fetched successfully",
+        data: result
+    })
+})

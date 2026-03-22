@@ -21,7 +21,11 @@ export const getAllProjects = async(req) =>{
                 thumbnail_url: true,
                 live_url: true,
                 features: true,
-                tech_stack: true,
+                tech_stack: {
+                    select: {
+                        tech_stack: true
+                    }
+                },
                 createdAt: true,
             },
             orderBy: [

@@ -17,6 +17,7 @@ model user {
   role       role      @default(admin)
   isActive   Boolean   @default(true)
   avatar_url String?
+  whatDoIDo  String?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   projects   project[]

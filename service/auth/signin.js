@@ -1,13 +1,14 @@
 import prisma from "../../lib/prisma.js"
 import AppError from "../../utils/appError.js"
-import { supabase } from "../../utils/supabase.js"
+import { supabaseAuth } from "../../utils/supabase.js"
 
 export const  signin_service = async (req) => {
     try {
         const {email, password} = req.body
         if(!email || !password) throw new AppError('Email and password are required.', 400)
 
-        const {data, error} = await supabase.auth.signInWithPassword({email, password})
+        const {data, error} = await supabaseAuth.auth.signInWithPassword({email, password})
+
         if(error){
             console.log(error)
             switch (error.code) {
@@ -24,7 +25,7 @@ export const  signin_service = async (req) => {
         }
 
         const userData = await prisma.user.findUnique({where : {id: data.user.id}, 
-            select: {id: true, email: true, first_name: true, last_name: true, avatar_url: true}})
+            select: {id: true, email: true, first_name: true, last_name: true, avatar_url: true, role: true, whatDoIDo: true}})
 
         if(!userData) throw new AppError('User not found.', 400)
 

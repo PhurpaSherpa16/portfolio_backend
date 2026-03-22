@@ -18,6 +18,7 @@ export const signup_service = async (req) => {
                     role: 'admin',
                     isActive: true,
                     avatar_url: '',
+                    whatDoIDo : 'web developer',
                 }
             })
             if(profileError){

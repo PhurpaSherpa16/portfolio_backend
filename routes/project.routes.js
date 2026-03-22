@@ -14,4 +14,5 @@ router.patch('/edit-project/:id', jwtAuthMiddleware, singleImageUpload, editProj
 router.delete('/delete-project/:id', jwtAuthMiddleware, deleteProject)
 router.patch('/feature-project/:id', jwtAuthMiddleware, uploadNone, patchFeaturedProject)
 
+
 export default router

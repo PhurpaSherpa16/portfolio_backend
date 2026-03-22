@@ -15,7 +15,7 @@ export const deleteProject = async (req) => {
         })
 
         if(fetching_image_details.image_url){
-            const image_name = fetching_image_details.image_url.split('/').pop()
+            const image_name = decodeURIComponent(fetching_image_details.image_url.split('/').pop())
             images = folders.map(folder => `${folder}/${image_name}`)
         }
 

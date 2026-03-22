@@ -27,8 +27,7 @@ export const uploadToSupabase = async (fileBuffer, bucket, path, contentType) =>
 }
 
 export const deleteFromSupabase = async (bucket, paths) => {
-    if (!paths || paths.length === 0) return;
-    
+    if (!paths || paths.length === 0) return
     try {
         const { error } = await supabase.storage
             .from(bucket)

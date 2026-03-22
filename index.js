@@ -6,6 +6,7 @@ import projectRoutes from './routes/project.routes.js'
 import authRoutes from './routes/auth.routes.js'
 import queriesRoutes from './routes/queries.routes.js'
 import notificationRoutes from './routes/notification.routes.js'
+import { startLatestProject } from "./corn/Corn.js"
 
 const app = express()
 app.use(cors())
@@ -16,6 +17,7 @@ app.use('/projects', projectRoutes)
 app.use('/auth', authRoutes)
 app.use('/queries', queriesRoutes)
 app.use('/notifications', notificationRoutes)
+startLatestProject()
 
 // error 
 app.use(errorHandler)

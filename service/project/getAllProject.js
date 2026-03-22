@@ -1,10 +1,12 @@
 import prisma from "../../lib/prisma.js"
 import AppError from "../../utils/appError.js"
+import { pagination } from "../../utils/pagination.js"
 
 export const getAllProjects = async(req) =>{
     try {
+        const {limit, page, start} = pagination(req, 10, 50)
         const total_items = await prisma.project.count()
-        if(total_items === 0) throw new AppError('No projects found', 404)
+        const total_pages = Math.ceil(total_items / limit)
 
         const projects = await prisma.project.findMany({
             select:{
@@ -25,11 +27,22 @@ export const getAllProjects = async(req) =>{
             orderBy: [
                 { featured: 'desc' },
                 { createdAt: 'asc' }
-            ]
+            ],
+            take: limit,
+            skip: start,
         })
+
+        if(projects.length === 0) return {
+            total_items,
+            total_pages,
+            current_page_number: page,
+            projects: [],
+        }
         
         return {
             total_items: total_items,
+            total_pages,
+            current_page_number: page,
             projects: projects
         }
     } catch (error) {

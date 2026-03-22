@@ -3,12 +3,11 @@ import AppError from "../../utils/appError.js"
 import { processImage } from "../../utils/imageProcessor.js"
 import { uploadToSupabase, deleteFromSupabase } from "../../utils/supabaseUpload.js"
 import { parseFlexibleArray } from "../../utils/dataParser.js"
-import path from "path"
 
 export const postProject = async (req) => {
     let uploadedPaths = [];
     const bucketName = "project_images";
-
+   
     try {
         const {
             title, tagline, short_desc, problem, solution, role, timeline, 
@@ -16,14 +15,16 @@ export const postProject = async (req) => {
             features, process, tech_stack
         } = req.body;
 
-        const imageFile = req.file;
-        const user = req.user;
+        const image = req.file;
+        const user = req.user
+
+        console.log(tech_stack)
 
         if (!user || !user.id) {
             throw new AppError('Unauthorized: User information missing', 401);
         }
 
-        if (!imageFile) {
+        if (!image) {
             throw new AppError('Main project image is required', 400);
         }
 
@@ -77,24 +78,36 @@ export const postProject = async (req) => {
             }).filter(p => p.process_title);
         }
 
+        let techRecords = []
+        if(parsedTechStack.length > 0){
+            techRecords = await Promise.all(
+                parsedTechStack.map((techName)=>
+                    prisma.tech_stack.upsert({
+                        where: { tech_stack: techName },
+                        update: {},
+                        create: { tech_stack: techName }
+                    })
+                ))
+        }
+
         // 2. Image Processing (using sharp)
-        const originalName = path.parse(imageFile.originalname).name.replace(/\s+/g, '_');
-        const timestamp = Date.now();
-        const mainImagePath = `main_image/${originalName}_${timestamp}.webp`;
-        const thumbnailPath = `thumbnail_image/${originalName}_${timestamp}.webp`;
+        const uniqueSuffix = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}`
+        const mainImagePath = `main_image/${title}_${uniqueSuffix}.webp`
+        const thumbnailPath = `thumbnail_image/${title}_${uniqueSuffix}.webp`
+
 
         // Process main image (Standardize/Convert to WebP)
-        const mainImageBuffer = await processImage(imageFile.buffer, { quality: 80 });
+        const mainImageBuffer = await processImage(image.buffer, { quality: 80 });
         
         // Process thumbnail (Resize/Compress/WebP)
-        const thumbnailBuffer = await processImage(imageFile.buffer, { 
+        const thumbnailBuffer = await processImage(image.buffer, { 
             width: 600, // Standard card size width
             quality: 70 
         });
 
         // 3. Supabase Upload
         const mainImageUrl = await uploadToSupabase(mainImageBuffer, bucketName, mainImagePath, "image/webp");
-        uploadedPaths.push(mainImagePath);
+        uploadedPaths.push(mainImagePath)
 
         const thumbnailUrl = await uploadToSupabase(thumbnailBuffer, bucketName, thumbnailPath, "image/webp");
         uploadedPaths.push(thumbnailPath)
@@ -143,32 +156,20 @@ export const postProject = async (req) => {
                     }))
                 });
             }
-
-            // Handle Tech Stack (Many-to-Many logic)
-            if (parsedTechStack.length > 0) {
-                for (const techName of parsedTechStack) {
-                    // Find or create the tech_stack record
-                    const tech = await tx.tech_stack.upsert({
-                        where: { tech_stack: techName },
-                        update: {},
-                        create: { tech_stack: techName }
-                    });
-
-                    // Link to the project
-                    await tx.project_tech_stack.create({
-                        data: {
-                            project_id_fk: newProject.id,
-                            tech_stack_id_fk: tech.id
-                        }
-                    });
-                }
+            
+            if(techRecords.length > 0){
+                await tx.project_tech_stack.createMany({
+                    data: techRecords.map(t => ({
+                        project_id_fk: newProject.id,
+                        tech_stack_id_fk: t.id
+                    }))
+                })
             }
+            
 
             return newProject;
         });
-
         return result.id
-
     } catch (error) {
         // Rollback uploaded images on failure
         if (uploadedPaths.length > 0) {

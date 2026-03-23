@@ -8,7 +8,7 @@ export const  signin_service = async (req) => {
         if(!email || !password) throw new AppError('Email and password are required.', 400)
 
         const {data, error} = await supabaseAuth.auth.signInWithPassword({email, password})
-
+        console.log(req.body)
         if(error){
             console.log(error)
             switch (error.code) {

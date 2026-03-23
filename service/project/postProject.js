@@ -15,7 +15,9 @@ export const postProject = async (req) => {
             features, process, tech_stack
         } = req.body;
 
-        const image = req.file;
+        console.log(req.body)
+
+        const image = req.file
         const user = req.user
 
         console.log(tech_stack)

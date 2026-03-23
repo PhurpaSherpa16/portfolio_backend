@@ -9,7 +9,18 @@ import notificationRoutes from './routes/notification.routes.js'
 import { startLatestProject } from "./corn/Corn.js"
 
 const app = express()
-app.use(cors())
+const allowedOrigins = ['https://portfolio-dashboard-phurpa.netlify.app']
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}))
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
